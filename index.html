@@ -217,7 +217,7 @@
             const textOutputDiv = document.createElement("div");
             textOutputDiv.id = "textOutput";
             textOutputDiv.classList.add("text-output", "bg-light", "p-3", "rounded", "mb-3");
-            textOutputDiv.textContent = textOutput;
+            textOutputDiv.innerHTML = textOutput;
             resultsDiv.appendChild(textOutputDiv);
 
             // Create table output
