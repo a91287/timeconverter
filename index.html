@@ -208,10 +208,10 @@
                 const fromConverted = convertToTimezone(fromDate, fromTimezone, timezone);
                 const toConverted = convertToTimezone(toDate, toTimezone, timezone);
 
-                textOutput += `Timezone: ${timezone}\n`;
-                textOutput += `From: ${fromConverted}\n`;
-                textOutput += `To: ${toConverted}\n`;
-                textOutput += `---\n`;
+                textOutput += `<p>Timezone: ${timezone}</p>`;
+                textOutput += `<p>From: ${fromConverted}</p>`;
+                textOutput += `<p>To: ${toConverted}</p>`;
+                textOutput += `<p>---</p>`;
             });
 
             const textOutputDiv = document.createElement("div");
