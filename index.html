@@ -304,51 +304,82 @@
         }
 
 function convertAndDisplay() {
-    const fromDateTimeLocal = document.getElementById("fromDateTime").value;
-    const fromTimezone = document.getElementById("fromTimezone").value || Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const toDateTimeLocal = document.getElementById("toDateTime").value;
-    const toTimezone = document.getElementById("toTimezone").value || Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const selectedTimezones = getSelectedTimezones();
+            const fromDateTimeLocal = document.getElementById("fromDateTime").value;
+            const fromTimezone = document.getElementById("fromTimezone").value || Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const toDateTimeLocal = document.getElementById("toDateTime").value;
+            const toTimezone = document.getElementById("toTimezone").value || Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const selectedTimezones = getSelectedTimezones();
 
-    if (!fromDateTimeLocal || !toDateTimeLocal) {
-        alert("Please fill in all input fields.");
-        return;
-    }
+            if (!fromDateTimeLocal || !toDateTimeLocal) {
+                alert("Please fill in all input fields.");
+                return;
+            }
 
-    if (selectedTimezones.length === 0) {
-        alert("Please select at least one timezone to convert to.");
-        return;
-    }
+            if (selectedTimezones.length === 0) {
+                alert("Please select at least one timezone to convert to.");
+                return;
+            }
 
-    // Parse the date-time strings into Date objects
-    const fromDate = new Date(fromDateTimeLocal);
-    const toDate = new Date(toDateTimeLocal);
+            const fromDate = new Date(fromDateTimeLocal);
+            const toDate = new Date(toDateTimeLocal);
 
-    if (fromDate > toDate) {
-        alert("The start date cannot be later than the end date.");
-        return;
-    }
+            if (fromDate > toDate) {
+                alert("The start date cannot be later than the end date.");
+                return;
+            }
 
-    const fromOffset = fromTimezone ? -fromDate.getTimezoneOffset() : 0;
-    const toOffset = toTimezone ? -toDate.getTimezoneOffset() : 0;
-    
-    // Convert to UTC
-    const fromDateTimeUTC = new Date(fromDate.getTime() + fromOffset * 60000);
-    const toDateTimeUTC = new Date(toDate.getTime() + toOffset * 60000);
+            const fromOffset = fromTimezone ? -fromDate.getTimezoneOffset() : 0;
+            const toOffset = toTimezone ? -toDate.getTimezoneOffset() : 0;
 
-    const resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = ""; // Clear previous results
+            const fromDateTimeUTC = new Date(fromDate.getTime() + fromOffset * 60000);
+            const toDateTimeUTC = new Date(toDate.getTime() + toOffset * 60000);
 
-    let textOutput = "";
-    selectedTimezones.forEach(timezone => {
-        const fromConverted = convertToTimezone(fromDateTimeUTC, timezone);
-        const toConverted = convertToTimezone(toDateTimeUTC, timezone);
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = ""; // Clear previous results
 
-        textOutput += `Timezone: ${timezone}\n`;
-        textOutput += `From: ${fromConverted}\n`;
-        textOutput += `To: ${toConverted}\n`;
-        textOutput += `---\n`;
-    });
+            let textOutput = "";
+            selectedTimezones.forEach(timezone => {
+                const fromConverted = convertToTimezone(fromDateTimeUTC, timezone);
+                const toConverted = convertToTimezone(toDateTimeUTC, timezone);
+
+                textOutput += `Timezone: ${timezone}\n`;
+                textOutput += `From: ${fromConverted}\n`;
+                textOutput += `To: ${toConverted}\n`;
+                textOutput += `---\n`;
+            });
+
+            const textOutputDiv = document.createElement("div");
+            textOutputDiv.id = "textOutput";
+            textOutputDiv.classList.add("text-output");
+            textOutputDiv.textContent = textOutput;
+            resultsDiv.appendChild(textOutputDiv);
+
+            // Create table output
+            const table = document.createElement("table");
+            table.classList.add("table");
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Timezone</th>
+                        <th>From</th>
+                        <th>To</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            `;
+            const tbody = table.querySelector("tbody");
+
+            selectedTimezones.forEach(timezone => {
+                const fromConverted = convertToTimezone(fromDateTimeUTC, timezone);
+                const toConverted = convertToTimezone(toDateTimeUTC, timezone);
+
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td><span class="math-inline">\{timezone\}</td\>
+<td\></span>{fromConverted}</td>
+                    <td>${toConverted}</td>
+                `;
+            });
 
     const textOutputDiv = document.createElement("div");
     textOutputDiv.id = "textOutput";
