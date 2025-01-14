@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1 Date and Time Converter</title>
+    <title>1w Date and Time Converter</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <style>
@@ -303,49 +303,115 @@
             }
         }
 
-        function convertAndDisplay() {
-            const fromDateTimeLocal = document.getElementById("fromDateTime").value;
-            const fromTimezone = document.getElementById("fromTimezone").value || Intl.DateTimeFormat().resolvedOptions().timeZone;
-            const toDateTimeLocal = document.getElementById("toDateTime").value;
-            const toTimezone = document.getElementById("toTimezone").value || Intl.DateTimeFormat().resolvedOptions().timeZone;
-            const selectedTimezones = getSelectedTimezones();
+function convertAndDisplay() {
+    const fromDateTimeLocal = document.getElementById("fromDateTime").value;
+    const fromTimezone = document.getElementById("fromTimezone").value || Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const toDateTimeLocal = document.getElementById("toDateTime").value;
+    const toTimezone = document.getElementById("toTimezone").value || Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const selectedTimezones = getSelectedTimezones();
 
-            if (!fromDateTimeLocal || !toDateTimeLocal) {
-                alert("Please fill in all input fields.");
-                return;
-            }
+    if (!fromDateTimeLocal || !toDateTimeLocal) {
+        alert("Please fill in all input fields.");
+        return;
+    }
 
-            if (selectedTimezones.length === 0) {
-                alert("Please select at least one timezone to convert to.");
-                return;
-            }
-            
-            const fromDateTimeUTC = new Date(fromDateTimeLocal);
-            const toDateTimeUTC = new Date(toDateTimeLocal);
-            
-            if (fromDateTimeUTC > toDateTimeUTC) {
-                alert("The start date cannot be later than the end date.");
-                return;
-            }
+    if (selectedTimezones.length === 0) {
+        alert("Please select at least one timezone to convert to.");
+        return;
+    }
 
-            if (fromTimezone) {
-                const fromOffset = new Date(fromDateTimeLocal).toLocaleString('en-US', {timeZone: fromTimezone, hour: 'numeric', hour12: false});
-                const fromUTCHour = new Date(fromDateTimeLocal).getUTCHours();
-                const fromLocalHour = parseInt(fromOffset, 10);
-                const timeDiff = fromLocalHour - fromUTCHour;
-                fromDateTimeUTC.setHours(fromDateTimeUTC.getHours() - timeDiff);
-            }
+    // Parse the date-time strings into Date objects
+    const fromDate = new Date(fromDateTimeLocal);
+    const toDate = new Date(toDateTimeLocal);
 
-            if (toTimezone) {
-                const toOffset = new Date(toDateTimeLocal).toLocaleString('en-US', {timeZone: toTimezone, hour: 'numeric', hour12: false});
-                const toUTCHour = new Date(toDateTimeLocal).getUTCHours();
-                const toLocalHour = parseInt(toOffset, 10);
-                const timeDiff = toLocalHour - toUTCHour;
-                toDateTimeUTC.setHours(toDateTimeUTC.getHours() - timeDiff);
-            }
+    if (fromDate > toDate) {
+        alert("The start date cannot be later than the end date.");
+        return;
+    }
 
-            const resultsDiv = document.getElementById("results");
-            resultsDiv.innerHTML = ""; // Clear previous results
+    const fromOffset = fromTimezone ? -fromDate.getTimezoneOffset() : 0;
+    const toOffset = toTimezone ? -toDate.getTimezoneOffset() : 0;
+    
+    // Convert to UTC
+    const fromDateTimeUTC = new Date(fromDate.getTime() + fromOffset * 60000);
+    const toDateTimeUTC = new Date(toDate.getTime() + toOffset * 60000);
+
+    const resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = ""; // Clear previous results
+
+    let textOutput = "";
+    selectedTimezones.forEach(timezone => {
+        const fromConverted = convertToTimezone(fromDateTimeUTC, timezone);
+        const toConverted = convertToTimezone(toDateTimeUTC, timezone);
+
+        textOutput += `Timezone: ${timezone}\n`;
+        textOutput += `From: ${fromConverted}\n`;
+        textOutput += `To: ${toConverted}\n`;
+        textOutput += `---\n`;
+    });
+
+    const textOutputDiv = document.createElement("div");
+    textOutputDiv.id = "textOutput";
+    textOutputDiv.classList.add("text-output");
+    textOutputDiv.textContent = textOutput;
+    resultsDiv.appendChild(textOutputDiv);
+
+    // Create table output
+    const table = document.createElement("table");
+    table.classList.add("table");
+    table.innerHTML = `
+        <thead>
+            <tr>
+                <th>Timezone</th>
+                <th>From</th>
+                <th>To</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    `;
+    const tbody = table.querySelector("tbody");
+
+    selectedTimezones.forEach(timezone => {
+        const fromConverted = convertToTimezone(fromDateTimeUTC, timezone);
+        const toConverted = convertToTimezone(toDateTimeUTC, timezone);
+
+        const row = tbody.insertRow();
+        row.innerHTML = `
+            <td>${timezone}</td>
+            <td>${fromConverted}</td>
+            <td>${toConverted}</td>
+        `;
+    });
+
+    resultsDiv.appendChild(table);
+}
+
+function convertToTimezone(date, timezone) {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: timezone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+    });
+
+    const formattedDate = formatter.format(date);
+    const parts = formattedDate.split(', ');
+    const datePart = parts[0].split('/');
+    const timePart = parts[1].split(' ');
+
+    const month = datePart[0];
+    const day = datePart[1];
+    const year = datePart[2];
+    const hour = timePart[0].split(':')[0];
+    const minute = timePart[0].split(':')[1];
+    const second = timePart[0].split(':')[2];
+    const ampm = timePart[1];
+
+    return `${month}/${day}/${year}, ${hour}:${minute}:${second} ${ampm}`;
+}
 
 function convertAndDisplay2() {
     // ... (other code remains the same)
