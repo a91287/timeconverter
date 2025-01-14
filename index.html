@@ -3,163 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1ww Date and Time Converter</title>
+    <title>Date and Time Converter</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-    <style>
-        body { 
-            padding: 20px;
-            background-color: #f5f5f5;
-            font-family: 'Arial', sans-serif;
-        }
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-        }
-        h1 {
-            color: #28a745; /* Green color */
-            margin-bottom: 30px;
-            font-weight: bold;
-            text-align: center;
-        }
-        .form-control {
-            border: 1px solid #ced4da;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-        .form-control:focus {
-            border-color: #28a745;
-            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            font-weight: bold;
-            color: #495057;
-        }
-        .timezone-list-container {
-            border: 5px solid #ced4da;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        .timezone-item {
-	   
-            padding-left:30px;
-            display: inline-block;
-            width: 48%; /* Adjusted for better alignment */
-            margin-bottom: 10px;
-            vertical-align: middle;
-        }
-        @media (max-width: 768px) {
-            .timezone-item {
-                width: 100%;
-            }
-            .table td, .table th {
-                font-size: smaller;
-                padding: 0.2rem;
-            }
-        }
-        .table-responsive {
-            display: block;
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        #timezoneList {
-            display: none; 
-            padding-top: 10px;
-        }
-        .timezone-list-container.expanded #timezoneList {
-            display: block;
-        }
-        .btn {
-            border-radius: 5px;
-            padding: 10px 20px;
-            font-weight: bold;
-        }
-        .btn-primary {
-            background-color: #28a745;
-            border-color: #28a745;
-        }
-        .btn-primary:hover {
-            background-color: #218838;
-            border-color: #1e7e34;
-        }
-        .btn-outline-secondary {
-            color: #6c757d;
-            border-color: #6c757d;
-        }
-        .btn-outline-secondary:hover {
-            background-color: #6c757d;
-            color: #fff;
-        }
-        .btn-secondary {
-            background-color: #6c757d;
-            border-color: #6c757d;
-        }
-        .btn-secondary:hover {
-            background-color: #5a6268;
-            border-color: #545b62;
-        }
-        .table {
-            border-collapse: collapse;
-        }
-        .table th, .table td {
-            border: 1px solid #ced4da;
-            padding: 10px;
-        }
-        .table th {
-            background-color: #f0f0f0;
-        }
-        .form-check-input {
-            margin-top: 5px;
-        }
-        .form-check-label {
-            font-weight: normal;
-            color: #495057;
-            margin-left: 5px;
-        }
-        .uncheck-btn-container {
-            text-align: right; /* Align the button to the right */
-            margin-top: 10px;
-        }
-
-        /* Styling improvements */
-        .timezone-list-container {
-            background-color: #f8f9fa; /* Light background for the timezone container */
-        }
-        .timezone-item input[type="checkbox"] {
-            margin-right: 8px; /* More space between checkbox and label */
-        }
-        .timezone-item label {
-            font-size: 0.95rem; /* Slightly smaller font size for timezone labels */
-        }
-        .form-row {
-            margin-left: -5px;
-            margin-right: -5px;
-        }
-        .form-group {
-            padding-left: 5px;
-            padding-right: 5px;
-        }
-    </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container mt-4">
         <h1 class="text-center"><i class="fas fa-clock"></i> Date and Time Converter</h1>
 
         <form id="conversionForm">
             <div class="form-row">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <label for="fromDateTime">From Date and Time:</label>
                     <input type="datetime-local" class="form-control" id="fromDateTime">
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <label for="fromTimezone">From Timezone (optional):</label>
                     <select class="form-control" id="fromTimezone">
                         <option value="">Browser Local</option>
@@ -168,68 +26,74 @@
             </div>
 
             <div class="form-row">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <label for="toDateTime">To Date and Time:</label>
                     <input type="datetime-local" class="form-control" id="toDateTime">
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <label for="toTimezone">To Timezone (optional):</label>
                     <select class="form-control" id="toTimezone">
                         <option value="">Browser Local</option>
                         </select>
                 </div>
             </div>
-            <div class="form-group timezone-list-container">
-                <div class="d-flex justify-content-between align-items-center">
-                    <label>Select Timezones to Convert To:</label>
-                    <button type="button" class="btn btn-outline-secondary btn-sm" id="toggleTimezoneList">
-                        <i class="fas fa-chevron-down"></i> Expand
-                    </button>
-                </div>
-                <div class="timezone-list" id="timezoneList"></div>
-                <div class="uncheck-btn-container mt-2">
-                    <button type="button" class="btn btn-secondary btn-sm" id="uncheckAllBtn">Uncheck All</button>
+
+            <div class="form-group">
+                <div class="bg-light p-3 rounded">
+                  <div class="d-flex justify-content-between align-items-center">
+                      <label class="mb-0">Select Timezones to Convert To:</label>
+                      <button type="button" class="btn btn-outline-secondary btn-sm" id="toggleTimezoneList">
+                          <i class="fas fa-chevron-down"></i> Expand
+                      </button>
+                  </div>
+                  <div class="timezone-list mt-2" id="timezoneList" style="display: none;"></div>
+                  <div class="text-right mt-2">
+                      <button type="button" class="btn btn-secondary btn-sm" id="uncheckAllBtn">Uncheck All</button>
+                  </div>
                 </div>
             </div>
 
             <button type="submit" class="btn btn-primary">Convert</button>
         </form>
 
-        <div id="results" class="mt-4 table-responsive">
-            </div>
+        <div id="results" class="mt-4">
+            <div class="text-output" id="textOutput"></div>
+            <div class="table-responsive" id="tableOutput"></div>
+        </div>
     </div>
 
     <script>
-	const timezones = [
-    "Africa/Cairo",
-    "Africa/Johannesburg",
-    "America/Anchorage",
-    "America/Buenos_Aires",
-    "America/Chicago",
-    "America/Denver",
-    "America/Los_Angeles",
-    "America/Mexico_City",
-    "America/New_York",
-    "America/Phoenix",
-    "America/Sao_Paulo",
-    "Asia/Dubai",
-    "Asia/Kolkata",
-    "Asia/Manila",
-    "Asia/Shanghai",
-    "Asia/Singapore",
-    "Asia/Tokyo",
-    "Australia/Brisbane",
-    "Australia/Melbourne",
-    "Australia/Sydney",
-    "Europe/Berlin",
-    "Europe/London",
-    "Europe/Madrid",
-    "Europe/Moscow",
-    "Europe/Paris",
-    "Europe/Rome",
-    "Pacific/Auckland",
-    "UTC"
-];
+        const timezones = [
+            "Africa/Cairo",
+            "Africa/Johannesburg",
+            "America/Anchorage",
+            "America/Buenos_Aires",
+            "America/Chicago",
+            "America/Denver",
+            "America/Los_Angeles",
+            "America/Mexico_City",
+            "America/New_York",
+            "America/Phoenix",
+            "America/Sao_Paulo",
+            "Asia/Dubai",
+            "Asia/Kolkata",
+            "Asia/Manila",
+            "Asia/Shanghai",
+            "Asia/Singapore",
+            "Asia/Tokyo",
+            "Australia/Brisbane",
+            "Australia/Melbourne",
+            "Australia/Sydney",
+            "Europe/Berlin",
+            "Europe/London",
+            "Europe/Madrid",
+            "Europe/Moscow",
+            "Europe/Paris",
+            "Europe/Rome",
+            "Pacific/Auckland",
+            "UTC"
+        ];
+
         function populateTimezoneDropdowns() {
             const timezoneDropdowns = document.querySelectorAll("#fromTimezone, #toTimezone");
             timezones.forEach(timezone => {
@@ -246,10 +110,9 @@
             const timezoneList = document.getElementById("timezoneList");
             timezoneList.innerHTML = '';
             timezones.forEach(timezone => {
-
                 const checkboxId = `checkbox-${timezone}`;
                 const div = document.createElement("div");
-                div.classList.add("timezone-item");
+                div.classList.add("form-check", "form-check-inline");
                 div.innerHTML = `
                     <input type="checkbox" class="form-check-input" id="${checkboxId}" value="${timezone}">
                     <label class="form-check-label" for="${checkboxId}">${timezone}</label>
@@ -303,7 +166,7 @@
             }
         }
 
-function convertAndDisplay() {
+        function convertAndDisplay() {
             const fromDateTimeLocal = document.getElementById("fromDateTime").value;
             const fromTimezone = document.getElementById("fromTimezone").value || Intl.DateTimeFormat().resolvedOptions().timeZone;
             const toDateTimeLocal = document.getElementById("toDateTime").value;
@@ -350,13 +213,13 @@ function convertAndDisplay() {
 
             const textOutputDiv = document.createElement("div");
             textOutputDiv.id = "textOutput";
-            textOutputDiv.classList.add("text-output");
+            textOutputDiv.classList.add("text-output", "bg-light", "p-3", "rounded", "mb-3");
             textOutputDiv.textContent = textOutput;
             resultsDiv.appendChild(textOutputDiv);
 
             // Create table output
             const table = document.createElement("table");
-            table.classList.add("table");
+            table.classList.add("table", "table-striped");
             table.innerHTML = `
                 <thead>
                     <tr>
@@ -375,134 +238,44 @@ function convertAndDisplay() {
 
                 const row = tbody.insertRow();
                 row.innerHTML = `
-                    <td><span class="math-inline">\{timezone\}</td\>
-<td\></span>{fromConverted}</td>
-                    <td>${toConverted}</td>
-                `;
-            });
-
-    const textOutputDiv = document.createElement("div");
-    textOutputDiv.id = "textOutput";
-    textOutputDiv.classList.add("text-output");
-    textOutputDiv.textContent = textOutput;
-    resultsDiv.appendChild(textOutputDiv);
-
-    // Create table output
-    const table = document.createElement("table");
-    table.classList.add("table");
-    table.innerHTML = `
-        <thead>
-            <tr>
-                <th>Timezone</th>
-                <th>From</th>
-                <th>To</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    `;
-    const tbody = table.querySelector("tbody");
-
-    selectedTimezones.forEach(timezone => {
-        const fromConverted = convertToTimezone(fromDateTimeUTC, timezone);
-        const toConverted = convertToTimezone(toDateTimeUTC, timezone);
-
-        const row = tbody.insertRow();
-        row.innerHTML = `
-            <td>${timezone}</td>
-            <td>${fromConverted}</td>
-            <td>${toConverted}</td>
-        `;
-    });
-
-    resultsDiv.appendChild(table);
-}
-
-function convertToTimezone(date, timezone) {
-    const formatter = new Intl.DateTimeFormat('en-US', {
-        timeZone: timezone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-    });
-
-    const formattedDate = formatter.format(date);
-    const parts = formattedDate.split(', ');
-    const datePart = parts[0].split('/');
-    const timePart = parts[1].split(' ');
-
-    const month = datePart[0];
-    const day = datePart[1];
-    const year = datePart[2];
-    const hour = timePart[0].split(':')[0];
-    const minute = timePart[0].split(':')[1];
-    const second = timePart[0].split(':')[2];
-    const ampm = timePart[1];
-
-    return `${month}/${day}/${year}, ${hour}:${minute}:${second} ${ampm}`;
-}
-
-function convertAndDisplay2() {
-    // ... (other code remains the same)
-
-    const resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = ""; // Clear previous results
-
-    selectedTimezones.forEach(timezone => {
-        const fromConverted = fromDateTimeUTC.toLocaleString("en-US", { timeZone: timezone });
-        const toConverted = toDateTimeUTC.toLocaleString("en-US", { timeZone: timezone });
-
-        const timezoneP = document.createElement("p");
-        timezoneP.textContent = `Timezone: ${timezone}`;
-        resultsDiv.appendChild(timezoneP);
-
-        const fromP = document.createElement("p");
-        fromP.textContent = `From: ${fromConverted}`;
-        resultsDiv.appendChild(fromP);
-
-        const toP = document.createElement("p");
-        toP.textContent = `To: ${toConverted}`;
-        resultsDiv.appendChild(toP);
-
-        const separatorP = document.createElement("p");
-        separatorP.textContent = `---`;
-        resultsDiv.appendChild(separatorP);
-    });
-}
-convertAndDisplay();
-// ... (rest of the code remains the same)
-		
-
-
-            const table = document.createElement("table");
-            table.classList.add("table");
-            table.innerHTML = `
-                <thead>
-                    <tr>
-                        <th>Timezone</th>
-                        <th>From</th>
-                        <th>To</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            `;
-            const tbody = table.querySelector("tbody");
-
-            selectedTimezones.forEach(timezone => {
-                const fromConverted = fromDateTimeUTC.toLocaleString("en-US", { timeZone: timezone });
-                const toConverted = toDateTimeUTC.toLocaleString("en-US", { timeZone: timezone });
-
-                const row = tbody.insertRow();
-                row.innerHTML = `
                     <td>${timezone}</td>
                     <td>${fromConverted}</td>
                     <td>${toConverted}</td>
                 `;
             });
 
-            resultsDiv.appendChild(table);
+            const tableOutputDiv = document.createElement("div");
+            tableOutputDiv.id = "tableOutput";
+            tableOutputDiv.classList.add("table-responsive");
+            tableOutputDiv.appendChild(table); // Add table to the div
+            resultsDiv.appendChild(tableOutputDiv); // Add div to the results
+        }
+
+        function convertToTimezone(date, timezone) {
+            const formatter = new Intl.DateTimeFormat('en-US', {
+                timeZone: timezone,
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+            });
+
+            const formattedDate = formatter.format(date);
+            const parts = formattedDate.split(', ');
+            const datePart = parts[0].split('/');
+            const timePart = parts[1].split(' ');
+
+            const month = datePart[0];
+            const day = datePart[1];
+            const year = datePart[2];
+            const hour = timePart[0].split(':')[0];
+            const minute = timePart[0].split(':')[1];
+            const second = timePart[0].split(':')[2];
+            const ampm = timePart[1];
+
+            return `${month}/${day}/${year}, ${hour}:${minute}:${second} ${ampm}`;
         }
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -511,12 +284,11 @@ convertAndDisplay();
             loadFromLocalStorage();
 
             const toggleButton = document.getElementById("toggleTimezoneList");
-            const timezoneListContainer = document.querySelector(".timezone-list-container");
+            const timezoneListContainer = document.querySelector(".timezone-list").parentNode;
             toggleButton.addEventListener("click", () => {
-                timezoneListContainer.classList.toggle("expanded");
-                toggleButton.innerHTML = timezoneListContainer.classList.contains("expanded") ? 
-                    '<i class="fas fa-chevron-up"></i> Collapse' : 
-                    '<i class="fas fa-chevron-down"></i> Expand';
+                const timezoneList = document.getElementById("timezoneList");
+                timezoneList.style.display = timezoneList.style.display === "none" ? "block" : "none";
+                toggleButton.innerHTML = timezoneList.style.display === "none" ? '<i class="fas fa-chevron-down"></i> Expand' : '<i class="fas fa-chevron-up"></i> Collapse';
             });
 
             const uncheckAllBtn = document.getElementById("uncheckAllBtn");
