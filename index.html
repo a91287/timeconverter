@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>nl Date and Time Converter</title>
+    <title>Date and Time Converter</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 </head>
@@ -286,10 +286,9 @@
             loadFromLocalStorage();
 
             const toggleButton = document.getElementById("toggleTimezoneList");
-            const timezoneListContainer = document.querySelector(".timezone-list").parentNode;
+            const timezoneList = document.getElementById("timezoneList"); // Corrected variable name
             toggleButton.addEventListener("click", () => {
-                const timezoneList = document.getElementById("timezoneList");
-                timezoneList.style.display = timezoneList.style.display === "none" ? "flex" : "none"; // Use flex for responsive grid
+                timezoneList.style.display = timezoneList.style.display === "none" ? "flex" : "none";
                 toggleButton.innerHTML = timezoneList.style.display === "none" ? '<i class="fas fa-chevron-down"></i> Expand' : '<i class="fas fa-chevron-up"></i> Collapse';
             });
 
