@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>aaDate and Time Converter</title>
+    <title>nl Date and Time Converter</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 </head>
 <body>
     <div class="container mt-4">
-        <h1 class="text-center"><i class="fas fa-clock"></i> Date and Time Converter</h1>
+        <h1 class="text-center mb-4"><i class="fas fa-clock"></i> Date and Time Converter</h1>
 
         <form id="conversionForm">
-            <div class="form-row">
-                <div class="form-group col-md-6">
+            <div class="row">
+                <div class="col-md-6 mb-3">
                     <label for="fromDateTime">From Date and Time:</label>
                     <input type="datetime-local" class="form-control" id="fromDateTime">
                 </div>
-                <div class="form-group col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="fromTimezone">From Timezone (optional):</label>
                     <select class="form-control" id="fromTimezone">
                         <option value="">Browser Local</option>
@@ -25,12 +25,12 @@
                 </div>
             </div>
 
-            <div class="form-row">
-                <div class="form-group col-md-6">
+            <div class="row">
+                <div class="col-md-6 mb-3">
                     <label for="toDateTime">To Date and Time:</label>
                     <input type="datetime-local" class="form-control" id="toDateTime">
                 </div>
-                <div class="form-group col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="toTimezone">To Timezone (optional):</label>
                     <select class="form-control" id="toTimezone">
                         <option value="">Browser Local</option>
@@ -38,26 +38,27 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <div class="bg-light p-3 rounded">
-                  <div class="d-flex justify-content-between align-items-center">
-                      <label class="mb-0">Select Timezones to Convert To:</label>
-                      <button type="button" class="btn btn-outline-secondary btn-sm" id="toggleTimezoneList">
-                          <i class="fas fa-chevron-down"></i> Expand
-                      </button>
-                  </div>
-                  <div class="timezone-list mt-2" id="timezoneList" style="display: none;"></div>
-                  <div class="text-right mt-2">
-                      <button type="button" class="btn btn-secondary btn-sm" id="uncheckAllBtn">Uncheck All</button>
-                  </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="mb-0">Select Timezones to Convert To:</label>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="toggleTimezoneList">
+                            <i class="fas fa-chevron-down"></i> Expand
+                        </button>
+                    </div>
+                    <div class="row mt-2" id="timezoneList" style="display: none;">
+                       </div>
+                    <div class="mt-2 text-right">
+                        <button type="button" class="btn btn-secondary btn-sm" id="uncheckAllBtn">Uncheck All</button>
+                    </div>
                 </div>
             </div>
-
-            <button type="submit" class="btn btn-primary">Convert</button>
+            
+            <button type="submit" class="btn btn-primary btn-block">Convert</button>
         </form>
 
         <div id="results" class="mt-4">
-            <div class="text-output" id="textOutput"></div>
+            <div class="text-output bg-light p-3 rounded mb-3" id="textOutput"></div>
             <div class="table-responsive" id="tableOutput"></div>
         </div>
     </div>
@@ -111,13 +112,15 @@
             timezoneList.innerHTML = '';
             timezones.forEach(timezone => {
                 const checkboxId = `checkbox-${timezone}`;
-                const div = document.createElement("div");
-                div.classList.add("form-check", "form-check-inline");
-                div.innerHTML = `
-                    <input type="checkbox" class="form-check-input" id="${checkboxId}" value="${timezone}">
-                    <label class="form-check-label" for="${checkboxId}">${timezone}</label>
+                const colDiv = document.createElement("div");
+                colDiv.classList.add("col-6", "col-sm-4", "col-md-3", "mb-2"); // Responsive columns
+                colDiv.innerHTML = `
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="${checkboxId}" value="${timezone}">
+                        <label class="form-check-label" for="${checkboxId}">${timezone}</label>
+                    </div>
                 `;
-                timezoneList.appendChild(div);
+                timezoneList.appendChild(colDiv);
             });
         }
 
@@ -286,7 +289,7 @@
             const timezoneListContainer = document.querySelector(".timezone-list").parentNode;
             toggleButton.addEventListener("click", () => {
                 const timezoneList = document.getElementById("timezoneList");
-                timezoneList.style.display = timezoneList.style.display === "none" ? "block" : "none";
+                timezoneList.style.display = timezoneList.style.display === "none" ? "flex" : "none"; // Use flex for responsive grid
                 toggleButton.innerHTML = timezoneList.style.display === "none" ? '<i class="fas fa-chevron-down"></i> Expand' : '<i class="fas fa-chevron-up"></i> Collapse';
             });
 
