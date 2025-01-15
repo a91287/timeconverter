@@ -96,7 +96,7 @@
             timezones.forEach(timezone => {
                 const checkboxId = `checkbox-${timezone}`;
                 const colDiv = document.createElement("div");
-                colDiv.classList.add("row"); // Responsive columns
+                colDiv.classList.add("col-12"); // Responsive columns
                 colDiv.innerHTML = `
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="${checkboxId}" value="${timezone}">
