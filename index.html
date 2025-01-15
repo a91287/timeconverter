@@ -6,6 +6,8 @@
     <title>Date and Time Converter</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data-10-year-range.min.js"></script>
 </head>
 <body>
     <div class="container mt-4">
@@ -21,7 +23,7 @@
                     <label for="fromTimezone">From Timezone (optional):</label>
                     <select class="form-control" id="fromTimezone">
                         <option value="">Browser Local</option>
-                        </select>
+                    </select>
                 </div>
             </div>
 
@@ -34,7 +36,7 @@
                     <label for="toTimezone">To Timezone (optional):</label>
                     <select class="form-control" id="toTimezone">
                         <option value="">Browser Local</option>
-                        </select>
+                    </select>
                 </div>
             </div>
 
@@ -47,13 +49,13 @@
                         </button>
                     </div>
                     <div class="row mt-2" id="timezoneList" style="display: none;">
-                       </div>
+                    </div>
                     <div class="mt-2 text-right">
                         <button type="button" class="btn btn-secondary btn-sm" id="uncheckAllBtn">Uncheck All</button>
                     </div>
                 </div>
             </div>
-            
+
             <button type="submit" class="btn btn-primary btn-block">Convert</button>
         </form>
 
@@ -64,36 +66,17 @@
     </div>
 
     <script>
-        const timezones = [
-            "Africa/Cairo",
-            "Africa/Johannesburg",
-            "America/Anchorage",
-            "America/Buenos_Aires",
-            "America/Chicago",
-            "America/Denver",
-            "America/Los_Angeles",
-            "America/Mexico_City",
-            "America/New_York",
-            "America/Phoenix",
-            "America/Sao_Paulo",
-            "Asia/Dubai",
-            "Asia/Kolkata",
-            "Asia/Manila",
-            "Asia/Shanghai",
-            "Asia/Singapore",
-            "Asia/Tokyo",
-            "Australia/Brisbane",
-            "Australia/Melbourne",
-            "Australia/Sydney",
-            "Europe/Berlin",
-            "Europe/London",
-            "Europe/Madrid",
-            "Europe/Moscow",
-            "Europe/Paris",
-            "Europe/Rome",
-            "Pacific/Auckland",
-            "UTC"
-        ];
+        const timezones = moment.tz.names(); // Use moment-timezone to get all timezones
+        
+        function convertToTimezone(date, fromTimezone, toTimezone) {
+            let convertedDate;
+            if (fromTimezone) {
+                convertedDate = moment.tz(date, fromTimezone);
+            } else {
+                convertedDate = moment(date);
+            }
+            return convertedDate.tz(toTimezone).format('YYYY-MM-DD HH:mm:ss Z'); // Format with timezone offset
+        }
 
         function populateTimezoneDropdowns() {
             const timezoneDropdowns = document.querySelectorAll("#fromTimezone, #toTimezone");
@@ -252,32 +235,6 @@
             tableOutputDiv.classList.add("table-responsive");
             tableOutputDiv.appendChild(table); // Add table to the div
             resultsDiv.appendChild(tableOutputDiv); // Add div to the results
-        }
-
-        function convertToTimezone(date, fromTimezone, toTimezone) {
-            let convertedDate;
-
-            if (fromTimezone) {
-                // If a source timezone is provided, perform the timezone conversion
-                convertedDate = new Date(date.toLocaleString('en-US', { timeZone: fromTimezone }));
-            } else {
-                // If no source timezone is provided, assume the date is in the browser's local timezone
-                convertedDate = new Date(date);
-            }
-
-            // Format the date in the target timezone
-            const options = {
-                timeZone: toTimezone,
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-            };
-
-            return convertedDate.toLocaleString('en-AU', options);
         }
 
         document.addEventListener("DOMContentLoaded", () => {
