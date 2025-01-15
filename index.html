@@ -14,23 +14,35 @@
         <h1 class="text-center mb-4"><i class="fas fa-clock"></i> Date and Time Converter</h1>
 
         <form id="conversionForm">
+            <div class="mb-3">
+                <label for="defaultDuration">Default Event Duration (minutes):</label>
+                <select class="form-control" id="defaultDuration">
+                    <option value="15">15 minutes</option>
+                    <option value="30">30 minutes</option>
+                    <option value="45">45 minutes</option>
+                    <option value="60">60 minutes</option>
+                    <option value="custom">Custom</option>
+                </select>
+                <input type="number" class="form-control mt-2" id="customDuration" style="display: none;" placeholder="Enter custom duration in minutes">
+            </div>
+
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="fromDateTime">From Date and Time:</label>
                     <input type="datetime-local" class="form-control" id="fromDateTime">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="fromTimezone">From Timezone (optional):</label>
-                    <select class="form-control" id="fromTimezone">
-                        <option value="">Browser Local</option>
-                    </select>
+                    <label for="toDateTime">To Date and Time:</label>
+                    <input type="datetime-local" class="form-control" id="toDateTime" readonly>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="toDateTime">To Date and Time:</label>
-                    <input type="datetime-local" class="form-control" id="toDateTime">
+                    <label for="fromTimezone">From Timezone (optional):</label>
+                    <select class="form-control" id="fromTimezone">
+                        <option value="">Browser Local</option>
+                    </select>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="toTimezone">To Timezone (optional):</label>
@@ -66,7 +78,7 @@
     </div>
 
     <script>
-        const timezones = moment.tz.names(); // Use moment-timezone to get all timezones
+        const timezones = moment.tz.names();
         
         function convertToTimezone(date, fromTimezone, toTimezone) {
             let convertedDate;
@@ -76,6 +88,24 @@
                 convertedDate = moment(date);
             }
             return convertedDate.tz(toTimezone).format('YYYY-MM-DD HH:mm:ss Z'); // Format with timezone offset
+        }
+
+        function updateToDateTime() {
+            const fromDateTime = document.getElementById("fromDateTime").value;
+            let defaultDuration = document.getElementById("defaultDuration").value;
+            if (defaultDuration === "custom") {
+                defaultDuration = parseInt(document.getElementById("customDuration").value) || 0;
+            } else {
+                defaultDuration = parseInt(defaultDuration)
+            }
+
+            if (fromDateTime && defaultDuration > 0) {
+                const fromMoment = moment(fromDateTime);
+                const toMoment = fromMoment.clone().add(defaultDuration, 'minutes');
+                document.getElementById("toDateTime").value = toMoment.format('YYYY-MM-DDTHH:mm');
+            } else {
+                document.getElementById("toDateTime").value = "";
+            }
         }
 
         function populateTimezoneDropdowns() {
@@ -89,6 +119,41 @@
                 });
             });
         }
+
+        function saveToLocalStorage() {
+            localStorage.setItem("fromDateTime", document.getElementById("fromDateTime").value);
+            localStorage.setItem("defaultDuration", document.getElementById("defaultDuration").value);
+            localStorage.setItem("customDuration", document.getElementById("customDuration").value);
+            // ... (rest of local storage saving remains the same)
+        }
+
+        function loadFromLocalStorage() {
+            const fromDateTime = localStorage.getItem("fromDateTime");
+            const defaultDuration = localStorage.getItem("defaultDuration");
+            const customDuration = localStorage.getItem("customDuration");
+            // ... (rest of local storage loading remains the same)
+            if (defaultDuration) {
+                document.getElementById("defaultDuration").value = defaultDuration;
+                if (defaultDuration === "custom") {
+                    document.getElementById("customDuration").style.display = "block";
+                    if (customDuration) {
+                        document.getElementById("customDuration").value = customDuration;
+                    }
+                }
+            }
+            updateToDateTime();
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // ... (Other event listeners stay the same)
+
+            document.getElementById("fromDateTime").addEventListener("change", updateToDateTime);
+            document.getElementById("defaultDuration").addEventListener("change", () => {
+                const customDurationInput = document.getElementById("customDuration");
+                customDurationInput.style.display = document.getElementById("defaultDuration").value === "custom" ? "block" : "none";
+                updateToDateTime();
+            });
+            document.getElementById("customDuration").addEventListener("input", updateToDateTime);
 
         function createTimezoneCheckboxes() {
             const timezoneList = document.getElementById("timezoneList");
